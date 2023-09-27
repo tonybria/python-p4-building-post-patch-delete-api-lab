@@ -20,18 +20,22 @@ class TestApp:
                 db.session.delete(af)
                 db.session.commit()
 
+            data = {
+                "name": "Apple Fritter",
+                "price": 2,
+                "bakery_id": 5,
+                "description": "Delicious pastry"  # Add description to match the expected format
+            }
+
             response = app.test_client().post(
                 '/baked_goods',
-                data={
-                    "name": "Apple Fritter",
-                    "price": 2,
-                    "bakery_id": 5,
-                }
+                json=data,  # Use json instead of data to send JSON data
             )
 
             af = BakedGood.query.filter_by(name="Apple Fritter").first()
 
             assert response.status_code == 201
+
             assert response.content_type == 'application/json'
             assert af.id
 
